@@ -78,20 +78,20 @@ publishing {
     publications {
         maven(MavenPublication) {
             from components.java
+
+            // GitHub Packages rejects uppercase artifactIds
+            artifactId = 'cucumber'
         }
     }
 
     repositories {
         maven {
-            url = 'https://maven.blakesmods.com'
+            name = 'GitHubPackages'
+            url = 'https://maven.pkg.github.com/HorizonRepublicLabs/maven'
 
             credentials {
-                username = System.getenv('BLAKESMODS_MAVEN_USERNAME')
-                password = System.getenv('BLAKESMODS_MAVEN_PASSWORD')
-            }
-
-            authentication {
-                basic(BasicAuthentication)
+                username = System.getenv('GITHUB_ACTOR')
+                password = System.getenv('GITHUB_TOKEN')
             }
         }
     }
