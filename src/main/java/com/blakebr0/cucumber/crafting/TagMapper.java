@@ -128,7 +128,9 @@ public class TagMapper {
                 if (json != null) {
                     if (json.has(tagId)) {
                         var itemId = json.get(tagId).getAsString();
-                        if (itemId.isEmpty() || "null".equalsIgnoreCase(itemId))
+                        // "minecraft:air" was written by older versions when the tag was still empty;
+                        // treat it as unresolved so adding the mod that fills the tag actually works
+                        if (itemId.isEmpty() || "null".equalsIgnoreCase(itemId) || "minecraft:air".equals(itemId))
                             return addTagToFile(tagId, json, file);
 
                         TAG_TO_ITEM_MAP.put(tagId, itemId);
@@ -172,7 +174,7 @@ public class TagMapper {
         }).map(Holder::value).orElse(Items.AIR);
 
         var itemId = "null";
-        if (BuiltInRegistries.ITEM.containsValue(item)) {
+        if (item != Items.AIR && BuiltInRegistries.ITEM.containsValue(item)) {
             itemId = BuiltInRegistries.ITEM.getKey(item).toString();
         }
 
